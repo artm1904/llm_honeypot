@@ -47,14 +47,14 @@ func (d *Director) BuildBeelzebub(beelzebubCoreConfigurations *parser.BeelzebubC
 
 func (d *Director) standardOutStrategy(event tracer.Event) {
 	log.WithFields(log.Fields{
-		"status": event.Status,
+		"beelzebub_status": event.Status,
 		"event":  event,
 	}).Info("New Event")
 }
 
 func (d *Director) beelzebubCloudStrategy(event tracer.Event) {
 	log.WithFields(log.Fields{
-		"status": event.Status,
+		"beelzebub_status": event.Status,
 		"event":  event,
 	}).Info("New Event")
 
@@ -67,7 +67,7 @@ func (d *Director) beelzebubCloudStrategy(event tracer.Event) {
 		log.Error(err.Error())
 	} else {
 		log.WithFields(log.Fields{
-			"status": result,
+			"beelzebub_status": result,
 			"event":  event,
 		}).Debug("Event published on beelzebub cloud")
 	}
@@ -75,7 +75,7 @@ func (d *Director) beelzebubCloudStrategy(event tracer.Event) {
 
 func (d *Director) rabbitMQTraceStrategy(event tracer.Event) {
 	log.WithFields(log.Fields{
-		"status": event.Status,
+		"beelzebub_status": event.Status,
 		"event":  event,
 	}).Info("New Event")
 
@@ -91,7 +91,7 @@ func (d *Director) rabbitMQTraceStrategy(event tracer.Event) {
 		log.Error(err.Error())
 	} else {
 		log.WithFields(log.Fields{
-			"status": event.Status,
+			"beelzebub_status": event.Status,
 			"event":  event,
 		}).Debug("Event published")
 	}
