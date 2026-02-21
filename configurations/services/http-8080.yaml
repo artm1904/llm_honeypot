@@ -1,4 +1,4 @@
-apiVersion: "v1"
+﻿apiVersion: "v1"
 protocol: "http"
 address: ":8080"
 description: "Apache 401"
@@ -9,3 +9,7 @@ commands:
       - "www-Authenticate: Basic"
       - "server: Apache"
     statusCode: 401
+plugin:
+  llmProvider: "ollama"
+  llmModel: "llama3.1"
+  llmUrl: "http://192.168.1.173:11434"
