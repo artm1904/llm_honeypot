@@ -1,0 +1,244 @@
+extends layout
+
+block content
+
+
+
+  #wrapper
+    header
+      p
+        a(href='https://www.siemens.com/global/en/home.html') Siemens Homepage
+          br
+          |
+          a(href='https://support.industry.siemens.com/tf/ww/en/conf/60/') IOT2000 Forum
+
+
+    nav#steuerunglinks
+      ul
+        li
+          a(href='/') Interfaces
+        li
+          a(href='/taskmanager') CPU/RAM
+        li
+          a(href='/network') Network
+        li
+          a(href='/usb') USB
+        li
+          a(href='/about') About
+
+
+
+
+    aside
+      .ubout
+      br
+      p Analog-Pin U0:
+      .aiu0_out
+      p Analog-Pin U1:
+      .aiu1_out
+      p Analog-Pin I0:
+      .aii0_out
+      p Analog-Pin I1:
+      .aii1_out
+      br
+      p User-LED:
+      button(onclick="led(1)") | ON
+      button(onclick="led(0)") | OFF
+      br
+      p Digitaler Ausgang DQ0:
+      button(onclick="dq0(1)") | HIGH
+      button(onclick="dq0(0)") | LOW
+      br
+      p Digitaler Ausgang DQ1:
+      button(onclick="dq1(1)") | HIGH
+      button(onclick="dq1(0)") | LOW
+
+
+
+
+
+    section
+      object(data='/images/IOT_Vektorgrafik.svg', id='iot_svg' ,type='image/svg+xml',height=332, width=500)
+
+      script(src='/javascripts/jquery/dist/jquery.min.js')
+
+      script.
+        var led_state;
+        var dq0_state;
+        var dq1_state;
+
+        //set dq0_state to button value and call send()
+        function dq0(state){
+          dq0_state = state;
+          send();
+        }
+
+        //set dq1_state to button value and call send()
+        function dq1(state){
+          dq1_state = state;
+          send();
+        }
+
+        //set led to button value and call send()
+        function led(state){
+          led_state = state;
+          send();
+        }
+
+        function send(){
+          //create json
+          var json_out = {"userled": 0, "DQ0": 0, "DQ1": 0};
+
+          //write current commands from website to JSON
+          json_out.userled = led_state;
+          json_out.DQ0 = dq0_state;
+          json_out.DQ1 = dq1_state;
+
+          //POST JSON to server
+          $.post('/submitJSON', json_out,null, "json");
+        }
+
+        //configure vector grafik
+        var svg = document.getElementById('iot_svg');
+        var ub_statestring;
+
+        //SVG loaded
+        svg.addEventListener('load',function(){
+
+          //configure SVG
+          var svgDoc = svg.contentDocument;
+          var svg_userbutton = svgDoc.getElementById('path174');
+          var svg_userled = svgDoc.getElementById('path552');
+          var svg_DI0 = svgDoc.getElementById('path193');
+          var svg_DI1 = svgDoc.getElementById('path193-6');
+          var svg_DI2 = svgDoc.getElementById('path193-9');
+          var svg_DI3 = svgDoc.getElementById('path193-7');
+          var svg_DI4 = svgDoc.getElementById('path193-0');
+          var svg_DQ0 = svgDoc.getElementById('path193-73');
+          var svg_DQ1 = svgDoc.getElementById('path193-95');        
+
+          //1s loop
+          var timer = setInterval(function()
+          {
+
+            //jQuery loaded
+            $(document).ready(function()
+            {
+              //Fetch JSON from Server
+              $.getJSON("/json_interface/gpio_interface_input.json", function(data){
+
+                if(typeof data !== "undefined")
+                {
+                  //print analog input values
+                  $('.aiu0_out').html(data.AIU0 + ' / 1023');
+                  $('.aiu1_out').html(data.AIU1 + ' / 1023');
+                  $('.aii0_out').html(data.AII0 + ' / 1023');
+                  $('.aii1_out').html(data.AII1 + ' / 1023');
+
+                  //colour userled
+                  if(led_state == 0)
+                  {
+                    svg_userled.setAttributeNS(null,'style', 'fill:#e5f5f9;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1.15828848');
+                  }
+                  if(led_state == 1)
+                  {
+                    svg_userled.setAttributeNS(null,'style', 'fill:#ffff00;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1.15828848');
+                  }
+
+                  //colour DQ0
+                  if(dq0_state == 0)
+                  {
+                    svg_DQ0.setAttributeNS(null,'style', 'fill:#000000;stroke-width:0.27338883');
+                  }
+                  if(dq0_state == 1)
+                  {
+                    svg_DQ0.setAttributeNS(null,'style', 'fill:#FF0000;stroke-width:0.27338883');
+                  }
+
+                  //colour DQ1
+                  if(dq1_state == 0)
+                  {
+                    svg_DQ1.setAttributeNS(null,'style', 'fill:#000000;stroke-width:0.27338883');
+                  }
+                  if(dq1_state == 1)
+                  {
+                    svg_DQ1.setAttributeNS(null,'style', 'fill:#FF0000;stroke-width:0.27338883'); 
+                  }
+
+                  //colour userbutton& set statestring
+                  if(data.userbutton == 0)
+                  {
+                    svg_userbutton.setAttributeNS(null,'style', 'fill:#ff0000;stroke-width:0.26458332');
+                    ub_statestring = 'pressed';
+                  }
+                  if(data.userbutton == 1)
+                  {
+                    svg_userbutton.setAttributeNS(null,'style', 'fill:#000000;stroke-width:0.26458332');
+                    ub_statestring = 'not pressed';
+                  }
+
+                  //write state of userbutton
+                  $('.ubout').html('User-Button is: '+ ub_statestring);
+
+                  //colour DI0
+                  if(data.DI0 == 0)
+                  {
+                    svg_DI0.setAttributeNS(null,'style', 'fill:#000000;stroke-width:0.27338883');
+                  }
+                  if(data.DI0 == 1)
+                  {
+                    svg_DI0.setAttributeNS(null,'style', 'fill:#FF0000;stroke-width:0.27338883');
+                  }
+
+                  //colour DI1
+                  if(data.DI1 == 0)
+                  {
+                    svg_DI1.setAttributeNS(null,'style', 'fill:#000000;stroke-width:0.27338883');
+                  }
+                  if(data.DI1 == 1)
+                  {
+                    svg_DI1.setAttributeNS(null,'style', 'fill:#FF0000;stroke-width:0.27338883');
+                  }
+
+                  //colour DI2
+                  if(data.DI2 == 0)
+                  {
+                    svg_DI2.setAttributeNS(null,'style', 'fill:#000000;stroke-width:0.27338883');
+                  }
+                  if(data.DI2 == 1)
+                  {
+                    svg_DI2.setAttributeNS(null,'style', 'fill:#FF0000;stroke-width:0.27338883');
+                  }
+
+                  //colour DI3
+                  if(data.DI3 == 0)
+                  {
+                    svg_DI3.setAttributeNS(null,'style', 'fill:#000000;stroke-width:0.27338883');
+                  }
+                  if(data.DI3 == 1)
+                  {
+                    svg_DI3.setAttributeNS(null,'style', 'fill:#FF0000;stroke-width:0.27338883');
+                  }
+
+                  //colour DI4
+                  if(data.DI4 == 0)
+                  {
+                    svg_DI4.setAttributeNS(null,'style', 'fill:#000000;stroke-width:0.27338883');
+                  }
+                  if(data.DI4 == 1)
+                  {
+                    svg_DI4.setAttributeNS(null,'style', 'fill:#FF0000;stroke-width:0.27338883');
+                  }
+                }
+              });
+            });
+          }, 1000);
+        }, false);
+
+    footer
+      hr
+      p IOT 2040 Webinterface V0.1
+
+
+
+

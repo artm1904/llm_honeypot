@@ -1,0 +1,101 @@
+extends layout
+
+block content
+  #wrapper
+    header
+      p
+        a(href='https://www.siemens.com/global/en/home.html') Siemens Homepage
+        br
+        a(href='https://support.industry.siemens.com/tf/ww/en/conf/60/') IOT2000 Forum
+
+    nav#steuerunglinks
+      ul
+        li
+          a(href='/') Interfaces
+        li
+          a(href='/taskmanager') CPU/RAM
+        li
+          a(href='/network') Network
+        li
+          a(href='/usb') USB
+        li
+          a(href='/about') About
+
+   
+    section
+      br
+      p RAM:
+      .totalram_out
+      .usedram_out
+      .freeram_out
+      .sharedram_out
+      .cache_out
+      .availableram_out
+      br
+      p SWAP:
+      .totalswap_out
+      .usedswap_out
+      .freeswap_out
+      br
+      p CPU Process-Time:
+      .usertime_out
+      .systime_out
+      .unusedtime_out
+      .waitingtime_out
+      .virtualtime_out
+      br
+      p Disk:
+      .size_out
+      .used_out
+      .usedperc_out
+
+
+
+    script(src='/javascripts/jquery/dist/jquery.min.js')
+
+    script. 
+      //5s loop
+      var timer = setInterval(function()
+      {
+          
+        //jQuery loaded
+        $(document).ready(function()
+        {
+          //Fetch JSON from Server
+          $.getJSON("/json_interface/task_interface.json", function(data){
+
+            if(typeof data !== "undefined")
+            {
+              //print in html              
+              $('.totalram_out').html("Total RAM: " + data.totalram + "MB");
+              $('.usedram_out').html("Used RAM: " + data.usedram + "MB");
+              $('.freeram_out').html("Free RAM: " + data.freeram + "MB");
+              $('.cache_out').html("Buff/Cache: " + data.cache + "MB");
+              $('.availableram_out').html("Available RAM: " + data.availableram + "MB");
+              $('.sharedram_out').html("Shared RAM: " + data.sharedram + "MB");
+              $('.totalswap_out').html("Total Swap: " + data.totalswap + "MB");
+              $('.freeswap_out').html("Free Swap: " + data.freeswap + "MB");
+              $('.usedswap_out').html("Used Swap: " + data.usedswap + "MB");
+
+              $('.usertime_out').html("Time for User-Processes: " + data.usertime + "%");
+              $('.systime_out').html("Time for System-Processes: " + data.systime + "%");
+              $('.unusedtime_out').html("Unused time: " + data.unusedtime + "%");
+              $('.waitingtime_out').html("Time waiting for Input/Output: " + data.waitingtime + "%");
+              $('.virtualtime_out').html("Time for virtual machines: " + data.virtualtime + "%");
+
+              $('.size_out').html("Disk Size: " + data.size);
+              $('.used_out').html("Used: " + data.used);
+              $('.usedperc_out').html("Used: " + data.usedperc);
+            }
+
+          });
+        });
+      }, 5000);
+
+
+    footer
+      hr
+      p IOT 2040 Webinterface V0.1
+
+
+

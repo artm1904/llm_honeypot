@@ -1,0 +1,39 @@
+extends layout
+
+block content
+  #wrapper
+    header
+      p
+        a(href='https://www.siemens.com/global/en/home.html') Siemens Homepage
+        br
+        a(href='https://support.industry.siemens.com/tf/ww/en/conf/60/') IOT2000 Forum
+
+    nav#steuerunglinks
+      ul
+        li
+          a(href='/') Interfaces
+        li
+          a(href='/taskmanager') CPU/RAM
+        li
+          a(href='/network') Network
+        li
+          a(href='/usb') USB
+        li
+          a(href='/about') About
+
+    section
+      br
+      br
+      br
+      p This Web-Interface was developed to create a simple viszualization for debugging purposes and for demonstrations. 
+      p Do not use it to send digital signals to a control, if it could harm people or material, because there is no guarantee it won't fail.
+      p Think carefully who may be able to access this Webinterface through your network, because it allows to set digital outputs and it
+      p may not be secure against attacks. 
+      p Feel free to use this Webinterface for own developments.   
+
+    footer
+      hr
+      p IOT 2040 Webinterface V0.1
+
+
+

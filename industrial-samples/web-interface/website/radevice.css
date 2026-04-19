@@ -1,0 +1,21 @@
+.tablehead{PADDING-LEFT: 10px;FONT-WEIGHT: bold;FONT-SIZE: 10px;COLOR: #002569;FONT-FAMILY: verdana, helvetica, arial, sans-serif;TEXT-ALIGN: center;BACKGROUND-COLOR:#BDC8DD;HEIGHT: 30px;}
+.msghead{PADDING-LEFT: 10px;FONT-WEIGHT: bold;FONT-SIZE: 10px;COLOR: #002569;FONT-FAMILY: verdana, helvetica, arial, sans-serif;TEXT-ALIGN: center;BACKGROUND-COLOR:#B7B6B6;}
+TD{FONT-SIZE: 10px;FONT-FAMILY: verdana, helvetica, arial, sans-serif;}
+BODY{FONT-SIZE: 10px;COLOR: #333333;FONT-FAMILY: verdana, helvetica, arial, sans-serif}
+A.tab:visited{COLOR: #000000;TEXT-DECORATION: none;}
+A.tab:hover{COLOR: #000000;TEXT-DECORATION: underline;}
+A.tab{COLOR: #000000;TEXT-DECORATION: none;}
+.copy2{BORDER-RIGHT: medium none;BORDER-TOP: medium none;MARGIN-TOP: 3px;FONT-SIZE: 10px;MARGIN-BOTTOM: 3px;BORDER-LEFT: medium none;BORDER-BOTTOM: medium none;HEIGHT: 0px;BACKGROUND-COLOR: lightpink;TEXT-ALIGN: center;TEXT-DECORATION: none}
+.copy3{BORDER-RIGHT: medium none;BORDER-TOP: medium none;MARGIN-TOP: 3px;FONT-SIZE: 10px;MARGIN-BOTTOM: 3px;BORDER-LEFT: medium none;BORDER-BOTTOM: medium none;HEIGHT: 0px;BACKGROUND-COLOR: transparent;TEXT-ALIGN: center;HIDEFOCUS:"true";TEXT-DECORATION: none}
+.copy4{BORDER-RIGHT: medium none;BORDER-TOP: medium none;MARGIN-TOP: 3px;FONT-SIZE: 10px;MARGIN-BOTTOM: 3px;BORDER-LEFT: medium none;BORDER-BOTTOM: medium none;HEIGHT: 0px;BACKGROUND-COLOR: #dedede;TEXT-ALIGN: center;HIDEFOCUS:"true";TEXT-DECORATION: none}
+.r1{PADDING-LEFT: 10px;FONT-SIZE: 10px;COLOR: #333333;FONT-FAMILY: verdana, helvetica, arial, sans-serif;HEIGHT: 0px;TEXT-ALIGN: left;TEXT-DECORATION: none}
+.r{MARGIN-TOP: 3px;PADDING-LEFT: 0px;FONT-SIZE: 10px;MARGIN-BOTTOM: 3px;COLOR: #333333;FONT-FAMILY: verdana, helvetica, arial, sans-serif;TEXT-ALIGN: center;TEXT-DECORATION: none}
+.T1{BORDER-LEFT: black 1px solid;BORDER-TOP: black 1px solid;BACKGROUND-COLOR:WHITE;}
+.T2{BORDER-TOP: black 1px solid;BACKGROUND-COLOR:WHITE;}
+.T3{BORDER-TOP: black 1px solid;BORDER-BOTTOM: black 1px solid;BACKGROUND-COLOR:#BDC8DD;}
+.T4{BORDER-TOP: black 1px solid;BORDER-BOTTOM: black 1px solid;BACKGROUND-COLOR:#BDC8DD;BORDER-LEFT: black 1px solid;}
+.T5{BACKGROUND-COLOR:#DEDEDE}
+.T6{BORDER-LEFT: black 1px solid;}
+.T7{BORDER-BOTTOM: black 1px solid;}
+A.list:visited{COLOR: blue;}
+A.list{COLOR: blue;}

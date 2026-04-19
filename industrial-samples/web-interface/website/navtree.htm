@@ -1,0 +1,29 @@
+<html><head><title>Rockwell Automation Tree Navigation</title><link type="text/css" href="navtree.css" rel=stylesheet><script type="text/javascript" src="navtree.js"></script>
+<script type="text/javascript">highlighted = 0;openImg=new Image();openImg.src="foldsel.gif";closedImg=new Image();closedImg.src="folder.gif";</script></head>
+<body bgcolor=#bcbcbc>
+<table width=100% cellspacing=0 cellpadding=0 border=0 style="color: #ffffff; background: #214184; font-family: verdana; font-size: 10px; border: solid #666666 1px;">
+<tr height=15px align=center>
+<td width=50% style="padding-left: 15px; padding-right: 15px;"><div><a href="navtree.htm#" class="treehead" id=expandAll onClick="changeAll('expand');" onMouseOver="overC(this,'#000000'); window.status=''; return true;" onMouseOut="outC(this,'#214184');">Expand</a></div></td>
+<td width=50% style="padding-left: 15px; padding-right: 15px;"><div><a href="navtree.htm#" class="treehead" id=collapseAll onClick="changeAll('collapse');" onMouseOver="overC(this,'#000000'); window.status=''; return true;" onMouseOut="outC(this,'#214184');">Minimize</a></div></td>
+</tr></table>
+<div style="padding-left: 5px;" id=spacer>
+<table width=100% cellspacing=0 cellpadding=0 border=0>
+<tr>
+<td nowrap=true valign=middle>
+<a class=entry onmouseover="overC(this,'#ffffff');" onmouseout="outC(this,'#bcbcbc');" onclick="highlight(this);" href="home.htm" target=home><img src="paper.gif">Home</a>
+<div class=entry><a href="navtree.htm#" onClick="showBranch('b_data');swapFolder('f_data');" onmouseover="overC(this,'#ffffff');" onmouseout="outC(this,'#bcbcbc');"><img src="folder.gif" border=0 id="f_data">Data Views</a></div>
+<span class=branch id=b_data>
+<a onclick="highlight(this);" onmouseover="overC(this,'#ffffff');" onmouseout="outC(this,'#bcbcbc');" href="http://192.168.0.200/dataview.htm" target=home><img src="paper.gif">Data Views</a>
+<a onclick="highlight(this);" onmouseover="overC(this,'#ffffff');" onmouseout="outC(this,'#bcbcbc');" href="http://192.168.0.200/newdata.htm" target=home><img src="paper.gif">New Data View</a>
+</span>
+<div class=entry><a href="navtree.htm#" onClick="showBranch('b_diag');swapFolder('f_diag');" onmouseover="overC(this,'#ffffff');" onmouseout="outC(this,'#bcbcbc');"><img src="folder.gif" border=0 id="f_diag">Diagnostics</a></div>
+<span class=branch id=b_diag>
+<a onclick="highlight(this);" onmouseover="overC(this,'#ffffff');" onmouseout="outC(this,'#bcbcbc');" href="http://192.168.0.200/diagover.htm" target=home><img src="paper.gif">Diagnostic Overview</a>
+<a onclick="highlight(this);" onmouseover="overC(this,'#ffffff');" onmouseout="outC(this,'#bcbcbc');" href="http://192.168.0.200/netset.htm" target=home><img src="paper.gif">Network Settings</a>
+<a onclick="highlight(this);" onmouseover="overC(this,'#ffffff');" onmouseout="outC(this,'#bcbcbc');" href="http://192.168.0.200/netstat.htm" target=home><img src="paper.gif">Network Status</a>
+</span>
+<div class=entry><a href="navtree.htm#" onClick="showBranch('b_admin');swapFolder('f_admin');" onmouseover="overC(this,'#ffffff');" onmouseout="outC(this,'#bcbcbc');"><img src="folder.gif" border=0 id="f_admin">Administrative Settings</a></div>
+<span class=branch id=b_admin>
+<a onclick="highlight(this);" onmouseover="overC(this,'#ffffff');" onmouseout="outC(this,'#bcbcbc');" href="http://192.168.0.200/adm_user.htm" target=home><img src="paper.gif">User Management</a>
+</span>
+</td></tr></table></div></body></html>

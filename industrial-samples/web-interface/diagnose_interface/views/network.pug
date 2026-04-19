@@ -1,0 +1,65 @@
+extends layout
+
+block content
+
+  #wrapper
+
+    header
+      p
+        a(href='https://www.siemens.com/global/en/home.html') Siemens Homepage
+        br
+        a(href='https://support.industry.siemens.com/tf/ww/en/conf/60/') IOT2000 Forum
+
+    nav#steuerunglinks
+      ul
+        li
+          a(href='/') Interfaces
+        li
+          a(href='/taskmanager') CPU/RAM
+        li
+          a(href='/network') Network
+        li
+          a(href='/usb') USB
+        li
+          a(href='/about') About
+
+     
+    section
+      br
+      br
+      p Shows the current network cofiguration, you have to refresh the page manually:
+      br
+      .eth0_out
+      br
+      .eth1_out
+      br
+      .lo_out
+      br
+      .wlan0_out
+
+      script(src='/javascripts/jquery/dist/jquery.min.js')
+      script. 
+        //jQuery loaded
+        $(document).ready(function()
+        {
+          //Fetch JSON from Server
+          $.getJSON("/json_interface/network_interface.json", function(data){
+            if(typeof data !== "undefined")
+            {
+              //print in html file
+              $('.eth0_out').html(data.eth0);
+              $('.eth1_out').html(data.eth1);
+              $('.lo_out').html(data.lo);
+              $('.wlan0_out').html(data.wlan0);
+            }
+
+          });
+
+        });
+
+    footer
+      hr
+      p IOT 2040 Webinterface V0.1
+   
+
+

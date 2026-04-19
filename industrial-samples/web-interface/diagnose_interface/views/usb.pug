@@ -1,0 +1,93 @@
+extends layout
+
+block content
+  #wrapper
+    header
+      p
+        a(href='https://www.siemens.com/global/en/home.html') Siemens Homepage
+        br
+        a(href='https://support.industry.siemens.com/tf/ww/en/conf/60/') IOT2000 Forum
+
+    nav#steuerunglinks
+      ul
+        li
+          a(href='/') Interfaces
+        li
+          a(href='/taskmanager') CPU/RAM
+        li
+          a(href='/network') Network
+        li
+          a(href='/usb') USB
+        li
+          a(href='/about') About
+
+     
+    section
+      br
+      br
+      p Shows up to 9 BUS devices (internal and external) and their ID, you have to refresh the page manually:
+      br
+      .usb1_out
+      br
+      .usb2_out
+      br
+      .usb3_out
+      br
+      .usb4_out
+      br
+      .usb5_out
+      br
+      .usb6_out
+      br
+      .usb7_out
+      br
+      .usb8_out
+      br
+      .usb9_out
+
+      script(src='/javascripts/jquery/dist/jquery.min.js')
+      script. 
+        //jQuery loaded
+        $(document).ready(function()
+        {
+          //Fetch JSON from Server
+          $.getJSON("/json_interface/usb_interface.json", function(data){
+
+            if(typeof data !== "undefined")
+            {
+              //if entry in JSON exists print in html
+              if(data.usb1!=='Bus undefined'){
+                $('.usb1_out').html(data.usb1);  
+              }
+              if(data.usb2!=='Bus undefined'){
+                $('.usb2_out').html(data.usb2);
+              }
+              if(data.usb3!=='Bus undefined'){
+                $('.usb3_out').html(data.usb3);
+              }
+              if(data.usb4!=='Bus undefined'){
+                $('.usb4_out').html(data.usb4);
+              }
+              if(data.usb5!=='Bus undefined'){
+                $('.usb5_out').html(data.usb5);
+              }
+              if(data.usb6!=='Bus undefined'){
+                $('.usb6_out').html(data.usb6);
+              }
+              if(data.usb7!=='Bus undefined'){
+                $('.usb7_out').html(data.usb7);
+              }
+              if(data.usb8!=='Bus undefined'){
+                $('.usb8_out').html(data.usb8);
+              }
+              if(data.usb9!=='Bus undefined'){
+                $('.usb9_out').html(data.usb9);
+              }
+            }
+          });
+        });
+
+    footer
+      hr
+      p IOT 2040 Webinterface V0.1
+
