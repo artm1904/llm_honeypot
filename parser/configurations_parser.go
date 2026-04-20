@@ -58,6 +58,8 @@ type Plugin struct {
 	LLMModel        string `yaml:"llmModel"`
 	LLMProvider     string `yaml:"llmProvider"`
 	Prompt          string `yaml:"prompt"`
+	PromptFile      string `yaml:"promptFile"`
+	RAGKnowledgePath string `yaml:"ragKnowledgePath"`
 	InputValidationEnabled bool `yaml:"inputValidationEnabled"`
 	InputValidationPrompt string `yaml:"inputValidationPrompt"`
 	OutputValidationEnabled bool `yaml:"outputValidationEnabled"`

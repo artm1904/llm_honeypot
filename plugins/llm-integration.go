@@ -34,6 +34,8 @@ type LLMHoneypot struct {
 	Model                   string
 	Host                    string
 	CustomPrompt            string
+	PromptFile              string
+	RAGKnowledgePath        string
 	InputValidationEnabled  bool
 	InputValidationPrompt   string
 	OutputValidationEnabled bool
@@ -115,6 +117,8 @@ func BuildHoneypot(
 		Model:                   servConf.Plugin.LLMModel,
 		Provider:                llmProvider,
 		CustomPrompt:            servConf.Plugin.Prompt,
+		PromptFile:              servConf.Plugin.PromptFile,
+		RAGKnowledgePath:        servConf.Plugin.RAGKnowledgePath,
 		InputValidationEnabled:  servConf.Plugin.InputValidationEnabled,
 		InputValidationPrompt:   servConf.Plugin.InputValidationPrompt,
 		OutputValidationEnabled: servConf.Plugin.OutputValidationEnabled,
@@ -143,6 +147,19 @@ func (llmHoneypot *LLMHoneypot) buildPrompt(command string) ([]Message, error) {
 		if llmHoneypot.CustomPrompt != "" {
 			prompt = llmHoneypot.CustomPrompt
 		}
+		if llmHoneypot.PromptFile != "" {
+			content, err := os.ReadFile(llmHoneypot.PromptFile)
+			if err == nil {
+				prompt = string(content)
+			}
+		}
+		if llmHoneypot.RAGKnowledgePath != "" {
+			LoadKnowledgeBase(llmHoneypot.RAGKnowledgePath)
+			chunks := Search(command, 3)
+			if len(chunks) > 0 {
+				prompt += "\n\n=== RELEVANT CONTEXT ===\n" + strings.Join(chunks, "\n\n")
+			}
+		}
 		messages = append(messages, Message{
 			Role:    SYSTEM.String(),
 			Content: prompt,
@@ -162,6 +179,19 @@ func (llmHoneypot *LLMHoneypot) buildPrompt(command string) ([]Message, error) {
 		prompt = systemPromptVirtualizeHTTPServer
 		if llmHoneypot.CustomPrompt != "" {
 			prompt = llmHoneypot.CustomPrompt
+		}
+		if llmHoneypot.PromptFile != "" {
+			content, err := os.ReadFile(llmHoneypot.PromptFile)
+			if err == nil {
+				prompt = string(content)
+			}
+		}
+		if llmHoneypot.RAGKnowledgePath != "" {
+			LoadKnowledgeBase(llmHoneypot.RAGKnowledgePath)
+			chunks := Search(command, 3)
+			if len(chunks) > 0 {
+				prompt += "\n\n=== RELEVANT CONTEXT ===\n" + strings.Join(chunks, "\n\n")
+			}
 		}
 		messages = append(messages, Message{
 			Role:    SYSTEM.String(),
