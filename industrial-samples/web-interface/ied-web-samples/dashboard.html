@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang='ru'>
+<head>
+<meta charset="utf-8">
+<title>SIPROTEC 5 7SJ85 — ПС Западная, Яч.14</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Roboto+Mono:wght@400;500&display=swap');
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:#0d1117;color:#c9d1d9;font-family:'Roboto',sans-serif;font-size:13px}
+  /* Header */
+  .header{background:linear-gradient(90deg,#1a2332,#111927);border-bottom:2px solid #009874;display:flex;align-items:center;padding:0 16px;height:42px;gap:16px}
+  .header .logo{color:#009874;font-weight:700;font-size:14px;letter-spacing:1px}
+  .header .location{color:#8b949e;font-size:11px}
+  .header .nav{display:flex;gap:2px;margin-left:24px}
+  .header .nav a{color:#8b949e;text-decoration:none;font-size:11px;padding:6px 14px;border-radius:3px;transition:all .15s;text-transform:uppercase;letter-spacing:.5px}
+  .header .nav a:hover,.header .nav a.active{background:rgba(0,152,116,.15);color:#fff}
+  .header .right{margin-left:auto;display:flex;align-items:center;gap:10px}
+  .header .user{font-size:11px;color:#009874;background:rgba(0,152,116,.1);padding:3px 10px;border-radius:10px;border:1px solid rgba(0,152,116,.2)}
+  .header .logout{color:#f85149;text-decoration:none;font-size:12px}
+  /* Status bar */
+  .statusbar{position:fixed;bottom:0;left:0;right:0;height:22px;background:#0a0e17;border-top:1px solid #30363d;display:flex;align-items:center;padding:0 12px;font-size:10px;color:#484f58;gap:20px}
+  .statusbar .dot{width:6px;height:6px;border-radius:50%;background:#3fb950;display:inline-block;margin-right:4px;animation:pulse 2s infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+  /* Grid layout */
+  .main{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:12px;padding-bottom:36px}
+  .card{background:#161b22;border:1px solid #30363d;border-radius:4px;overflow:hidden}
+  .card-header{background:#1a2332;padding:8px 14px;font-size:12px;font-weight:700;color:#009874;text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid #30363d}
+  .card-body{padding:12px 14px}
+  .card.full{grid-column:1/-1}
+  /* Measurement blocks */
+  .meas-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+  .meas-item{background:#0d1117;border:1px solid #21262d;border-radius:3px;padding:8px 10px;text-align:center}
+  .meas-item .label{font-size:10px;color:#8b949e;text-transform:uppercase;margin-bottom:2px}
+  .meas-item .value{font-size:20px;font-weight:700;font-family:'Roboto Mono',monospace;color:#c9d1d9}
+  .meas-item .unit{font-size:11px;color:#6e7681}
+  .meas-item.ok .value{color:#3fb950}
+  .meas-item.warn .value{color:#e3b341}
+  .meas-item.err .value{color:#f85149}
+  /* Status indicators */
+  .status-row{display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid #21262d}
+  .status-row:last-child{border-bottom:none}
+  .status-row .key{color:#8b949e}
+  .status-row .val{font-family:'Roboto Mono',monospace}
+  .status-row .val.green{color:#3fb950}
+  .status-row .val.red{color:#f85149}
+  .status-row .val.yellow{color:#e3b341}
+  /* Protection table */
+  .prot-table{width:100%;border-collapse:collapse;font-size:12px}
+  .prot-table th{background:#0d1117;color:#8b949e;padding:5px 8px;text-align:left;font-size:10px;text-transform:uppercase}
+  .prot-table td{padding:4px 8px;border-bottom:1px solid #21262d}
+  .prot-table .badge{display:inline-block;padding:2px 8px;border-radius:3px;font-size:10px;font-weight:700}
+  .prot-table .badge.ready{background:rgba(63,185,80,.15);color:#3fb950}
+  .prot-table .badge.trip{background:rgba(248,81,73,.15);color:#f85149}
+  .prot-table .badge.blocked{background:rgba(139,148,158,.15);color:#8b949e}
+  /* SOE mini */
+  .soe-table{width:100%;border-collapse:collapse;font-size:11px}
+  .soe-table th{background:#0d1117;color:#8b949e;padding:4px 6px;text-align:left;font-size:9px;text-transform:uppercase}
+  .soe-table td{padding:3px 6px;border-bottom:1px solid #21262d}
+  .soe-table .ts{font-family:'Roboto Mono',monospace;color:#79c0ff;font-size:10px;white-space:nowrap}
+  /* SLD placeholder */
+  .sld-area{background:#0d1117;border:1px solid #21262d;border-radius:3px;min-height:220px;display:flex;align-items:center;justify-content:center;position:relative}
+  .sld-area svg{width:100%;height:220px}
+  /* Comm indicators */
+  .comm-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+  .comm-item{background:#0d1117;border:1px solid #21262d;border-radius:3px;padding:6px 8px;text-align:center}
+  .comm-item .proto{font-size:10px;color:#8b949e;text-transform:uppercase;margin-bottom:2px}
+  .comm-item .state{font-size:12px;font-weight:700}
+  .comm-item .state.active{color:#3fb950}
+  .comm-item .state.inactive{color:#f85149}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="logo">SIPROTEC 5</div>
+  <div class="location">ПС 110/10 кВ «Западная» · Яч.14 Фидер «Промзона-1»</div>
+  <div class="nav">
+    <a href="/" class="active">Обзор</a>
+    <a href="/measurements">Измерения</a>
+    <a href="/settings">Уставки</a>
+    <a href="/events">Журнал</a>
+    <a href="/comtrade">Осциллограммы</a>
+    <a href="/diagnostics">Диагностика</a>
+  </div>
+  <div class="right">
+    <span class="user">admin (Администратор)</span>
+    <a href="/logout" class="logout">⏻ Выход</a>
+  </div>
+</div>
+
+<!-- MAIN GRID -->
+<div class="main">
+
+  <!-- CARD: МНЕМОСХЕМА -->
+  <div class="card full">
+    <div class="card-header">📐 Однолинейная схема присоединения</div>
+    <div class="card-body">
+      <div class="sld-area">
+        <svg viewBox="0 0 800 200" xmlns="http://www.w3.org/2000/svg">
+          <!-- Busbar 10kV -->
+          <line x1="50" y1="30" x2="750" y2="30" stroke="#009874" stroke-width="3"/>
+          <text x="20" y="34" fill="#8b949e" font-size="11">10 кВ</text>
+          <!-- Feeder line -->
+          <line x1="400" y1="30" x2="400" y2="60" stroke="#c9d1d9" stroke-width="2"/>
+          <!-- Disconnector -->
+          <rect x="393" y="60" width="14" height="8" fill="none" stroke="#3fb950" stroke-width="2"/>
+          <text x="415" y="68" fill="#8b949e" font-size="9">QS1 ВКЛ</text>
+          <!-- CT -->
+          <line x1="400" y1="68" x2="400" y2="85" stroke="#c9d1d9" stroke-width="2"/>
+          <circle cx="400" cy="90" r="6" fill="none" stroke="#79c0ff" stroke-width="1.5"/>
+          <circle cx="400" cy="97" r="6" fill="none" stroke="#79c0ff" stroke-width="1.5"/>
+          <text x="415" y="95" fill="#8b949e" font-size="9">ТТ 600/5</text>
+          <!-- Circuit Breaker -->
+          <line x1="400" y1="103" x2="400" y2="120" stroke="#c9d1d9" stroke-width="2"/>
+          <rect x="390" y="120" width="20" height="16" rx="2" fill="#3fb950" stroke="#3fb950" stroke-width="1"/>
+          <text x="394" y="131" fill="#000" font-size="8" font-weight="700">ВКЛ</text>
+          <text x="415" y="131" fill="#8b949e" font-size="9">Q1 (XCBR)</text>
+          <!-- IED -->
+          <line x1="400" y1="136" x2="400" y2="155" stroke="#c9d1d9" stroke-width="2"/>
+          <rect x="355" y="155" width="90" height="30" rx="3" fill="#1a2332" stroke="#009874" stroke-width="1.5"/>
+          <text x="365" y="173" fill="#009874" font-size="10" font-weight="700">IED 7SJ85</text>
+          <!-- Load -->
+          <line x1="400" y1="185" x2="400" y2="195" stroke="#c9d1d9" stroke-width="2"/>
+          <polygon points="385,195 415,195 400,200" fill="#e3b341" stroke="#e3b341"/>
+          <text x="415" y="199" fill="#8b949e" font-size="9">Нагрузка ~80A</text>
+          <!-- VT tee -->
+          <line x1="300" y1="30" x2="300" y2="50" stroke="#c9d1d9" stroke-width="1"/>
+          <circle cx="300" cy="55" r="5" fill="none" stroke="#79c0ff" stroke-width="1.5"/>
+          <circle cx="300" cy="62" r="5" fill="none" stroke="#79c0ff" stroke-width="1.5"/>
+          <text x="280" y="75" fill="#8b949e" font-size="9">ТН 10000/100</text>
+          <!-- Other feeders (sketched) -->
+          <line x1="150" y1="30" x2="150" y2="55" stroke="#484f58" stroke-width="1" stroke-dasharray="3"/>
+          <text x="130" y="65" fill="#484f58" font-size="9">Яч.12</text>
+          <line x1="250" y1="30" x2="250" y2="55" stroke="#484f58" stroke-width="1" stroke-dasharray="3"/>
+          <text x="230" y="65" fill="#484f58" font-size="9">Яч.13</text>
+          <line x1="550" y1="30" x2="550" y2="55" stroke="#484f58" stroke-width="1" stroke-dasharray="3"/>
+          <text x="530" y="65" fill="#484f58" font-size="9">Яч.15</text>
+          <line x1="650" y1="30" x2="650" y2="55" stroke="#484f58" stroke-width="1" stroke-dasharray="3"/>
+          <text x="630" y="65" fill="#484f58" font-size="9">Яч.16</text>
+          <!-- Transformer incoming -->
+          <line x1="50" y1="30" x2="50" y2="10" stroke="#c9d1d9" stroke-width="2"/>
+          <text x="20" y="8" fill="#8b949e" font-size="9">от Т1 (110/10 кВ)</text>
+        </svg>
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD: ТЕКУЩИЕ ИЗМЕРЕНИЯ -->
+  <div class="card">
+    <div class="card-header">⚡ Текущие измерения</div>
+    <div class="card-body">
+      <div class="meas-grid">
+        <div class="meas-item"><div class="label">Ia</div><div class="value">78.2</div><div class="unit">A</div></div>
+        <div class="meas-item"><div class="label">Ib</div><div class="value">81.4</div><div class="unit">A</div></div>
+        <div class="meas-item"><div class="label">Ic</div><div class="value">79.8</div><div class="unit">A</div></div>
+        <div class="meas-item ok"><div class="label">I0</div><div class="value">0.12</div><div class="unit">A</div></div>
+        <div class="meas-item"><div class="label">Ua</div><div class="value">5.79</div><div class="unit">кВ</div></div>
+        <div class="meas-item"><div class="label">Ub</div><div class="value">5.81</div><div class="unit">кВ</div></div>
+        <div class="meas-item"><div class="label">Uc</div><div class="value">5.77</div><div class="unit">кВ</div></div>
+        <div class="meas-item ok"><div class="label">f</div><div class="value">50.02</div><div class="unit">Гц</div></div>
+      </div>
+      <div style="margin-top:10px;display:flex;gap:12px">
+        <div class="meas-item" style="flex:1"><div class="label">P</div><div class="value">13.52</div><div class="unit">МВт</div></div>
+        <div class="meas-item" style="flex:1"><div class="label">Q</div><div class="value">4.18</div><div class="unit">Мвар</div></div>
+        <div class="meas-item ok" style="flex:1"><div class="label">cos φ</div><div class="value">0.955</div><div class="unit">—</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD: СТАТУС УСТРОЙСТВА -->
+  <div class="card">
+    <div class="card-header">🖥 Статус устройства</div>
+    <div class="card-body">
+      <div class="status-row"><span class="key">Режим работы</span><span class="val green">В РАБОТЕ (RUN)</span></div>
+      <div class="status-row"><span class="key">Выключатель (Q1)</span><span class="val green">ВКЛЮЧЁН</span></div>
+      <div class="status-row"><span class="key">Разъединитель (QS1)</span><span class="val green">ВКЛЮЧЁН</span></div>
+      <div class="status-row"><span class="key">Здоровье устройства</span><span class="val green">НОРМА</span></div>
+      <div class="status-row"><span class="key">Uptime</span><span class="val">52д 07ч 14м</span></div>
+      <div class="status-row"><span class="key">CPU / RAM</span><span class="val">42°C / 41 из 128 МБ</span></div>
+      <div class="status-row"><span class="key">Flash</span><span class="val">112 из 256 МБ (44%)</span></div>
+      <div class="status-row"><span class="key">NTP</span><span class="val green">Синхронизировано (stratum 3)</span></div>
+      <div class="status-row"><span class="key">Последнее срабатывание</span><span class="val yellow">19.04.2026 10:14:33 МТЗ I> фаза A</span></div>
+    </div>
+  </div>
+
+  <!-- CARD: ЗАЩИТЫ -->
+  <div class="card">
+    <div class="card-header">🛡 Состояние защит</div>
+    <div class="card-body">
+      <table class="prot-table">
+        <thead><tr><th>ANSI</th><th>Функция</th><th>Уставка</th><th>Состояние</th></tr></thead>
+        <tbody>
+          <tr><td>50-1</td><td>ТО (I>>)</td><td>1200 A</td><td><span class="badge ready">ГОТОВ</span></td></tr>
+          <tr><td>50-2</td><td>ТО (I>>>)</td><td>3000 A</td><td><span class="badge ready">ГОТОВ</span></td></tr>
+          <tr><td>51-1</td><td>МТЗ (I>)</td><td>600 A / SI 0.30с</td><td><span class="badge ready">ГОТОВ</span></td></tr>
+          <tr><td>51N</td><td>ТЗНП (I0>)</td><td>30 A / 0.50с</td><td><span class="badge ready">ГОТОВ</span></td></tr>
+          <tr><td>79</td><td>АПВ</td><td>1 цикл / 0.80с</td><td><span class="badge ready">ГОТОВ</span></td></tr>
+          <tr><td>27</td><td>ЗНН (U<)</td><td>80% Uном</td><td><span class="badge ready">ГОТОВ</span></td></tr>
+          <tr><td>59</td><td>ЗМН (U>)</td><td>120% Uном</td><td><span class="badge ready">ГОТОВ</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- CARD: СВЯЗЬ -->
+  <div class="card">
+    <div class="card-header">📡 Каналы связи</div>
+    <div class="card-body">
+      <div class="comm-grid">
+        <div class="comm-item"><div class="proto">MMS (102)</div><div class="state active">АКТИВЕН</div></div>
+        <div class="comm-item"><div class="proto">GOOSE Pub</div><div class="state active">АКТИВЕН</div></div>
+        <div class="comm-item"><div class="proto">GOOSE Sub</div><div class="state active">АКТИВЕН</div></div>
+        <div class="comm-item"><div class="proto">SV Sub</div><div class="state active">АКТИВЕН</div></div>
+        <div class="comm-item"><div class="proto">SNMP</div><div class="state active">АКТИВЕН</div></div>
+        <div class="comm-item"><div class="proto">NTP</div><div class="state active">СИНХР.</div></div>
+      </div>
+      <div style="margin-top:10px">
+        <div class="status-row"><span class="key">IP (X100)</span><span class="val">192.168.10.11</span></div>
+        <div class="status-row"><span class="key">MAC</span><span class="val">00:1C:06:11:AA:01</span></div>
+        <div class="status-row"><span class="key">GOOSE GoCB</span><span class="val">IED_PTOC_F1/LLN0$GO$GoCB_PTOC</span></div>
+        <div class="status-row"><span class="key">SV svID</span><span class="val">MU_F1_SV01 (4000 smp/s)</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD: ПОСЛЕДНИЕ СОБЫТИЯ -->
+  <div class="card full">
+    <div class="card-header">📖 Последние события (SOE)</div>
+    <div class="card-body">
+      <table class="soe-table">
+        <thead><tr><th>#</th><th>Метка времени</th><th>Событие</th><th>Значение</th><th>Источник</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td class="ts">19.04.2026 10:14:33.412</td><td>Пуск МТЗ I> фаза A</td><td>612.4 A</td><td>PTOC1</td></tr>
+          <tr><td>2</td><td class="ts">19.04.2026 10:14:33.814</td><td style="color:#f85149">Срабатывание МТЗ I> фаза A</td><td>612.4 A</td><td>PTOC1</td></tr>
+          <tr><td>3</td><td class="ts">19.04.2026 10:14:33.819</td><td style="color:#f85149">Выключатель Q1 отключён (TRIP)</td><td>OFF</td><td>XCBR1</td></tr>
+          <tr><td>4</td><td class="ts">19.04.2026 10:14:35.458</td><td style="color:#3fb950">Выключатель Q1 включён (АПВ)</td><td>ON</td><td>RREC1</td></tr>
+          <tr><td>5</td><td class="ts">18.04.2026 22:01:12.003</td><td>Синхронизация NTP выполнена</td><td>Stratum 3</td><td>SYSTEM</td></tr>
+          <tr><td>6</td><td class="ts">18.04.2026 08:32:44.117</td><td>Вход: user=admin src=192.168.10.5</td><td>—</td><td>SECURITY</td></tr>
+          <tr><td>7</td><td class="ts">17.04.2026 15:22:01.892</td><td>Самодиагностика: все модули исправны</td><td>—</td><td>SYSTEM</td></tr>
+        </tbody>
+      </table>
+      <div style="margin-top:8px;text-align:right">
+        <a href="/events" style="color:#009874;font-size:11px;text-decoration:none">Полный журнал →</a>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- STATUS BAR -->
+<div class="statusbar">
+  <span><span class="dot"></span>Подключено</span>
+  <span>IEC 61850 MMS / GOOSE / SV</span>
+  <span>192.168.10.11</span>
+  <span id="clock"></span>
+  <span style="margin-left:auto">SIPROTEC 5 V09.30.02 · MiniWeb/2.0</span>
+</div>
+
+<script>
+setInterval(function(){
+  document.getElementById('clock').textContent = new Date().toLocaleString('ru-RU');
+}, 1000);
+</script>
+</body>
+</html>

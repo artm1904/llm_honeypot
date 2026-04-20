@@ -1,0 +1,166 @@
+{
+  "description": "Примеры JSON-ответов API веб-интерфейса IED SIPROTEC 5 7SJ85 для использования LLM",
+
+  "GET /api/v1/measurements": {
+    "timestamp": "2026-04-19T10:48:12.341Z",
+    "currents": {
+      "Ia": 78.2, "Ib": 81.4, "Ic": 79.8, "I0": 0.12,
+      "unit": "A_secondary", "ct_ratio": "600/5",
+      "Ia_primary": 9384, "Ib_primary": 9768, "Ic_primary": 9576
+    },
+    "voltages": {
+      "Ua": 57.9, "Ub": 58.1, "Uc": 57.7,
+      "Uab": 100.3, "Ubc": 100.1, "Uca": 100.4,
+      "unit": "V_secondary", "vt_ratio": "10000/100",
+      "Ua_primary": 5790, "Ub_primary": 5810, "Uc_primary": 5770
+    },
+    "angles_deg": {
+      "phi_Ia": 0.0, "phi_Ib": -120.3, "phi_Ic": 119.5,
+      "phi_Ua": 30.1, "phi_Ub": -89.8, "phi_Uc": 150.2
+    },
+    "frequency": { "value": 50.02, "unit": "Hz" },
+    "power": {
+      "P": 13.52, "Q": 4.18, "S": 14.15,
+      "cos_phi": 0.955,
+      "P_unit": "MW", "Q_unit": "Mvar", "S_unit": "MVA"
+    }
+  },
+
+  "GET /api/v1/device_state": {
+    "device": "SIPROTEC 5 7SJ85",
+    "ied_name": "IED_PTOC_F1",
+    "serial": "7SJ85-A1B2C3D4",
+    "firmware": "V09.30.02",
+    "hardware": "HW-C01",
+    "mode": "RUN",
+    "health": "OK",
+    "breaker_state": "CLOSED",
+    "disconnector_state": "CLOSED",
+    "uptime_hours": 1247,
+    "cpu_temp_c": 42,
+    "ram_used_mb": 41,
+    "ram_total_mb": 128,
+    "flash_used_mb": 112,
+    "flash_total_mb": 256,
+    "ntp_sync": true,
+    "ntp_stratum": 3,
+    "communication": {
+      "mms": "ACTIVE",
+      "goose_pub": "ACTIVE",
+      "goose_sub": "ACTIVE",
+      "sv_sub": "ACTIVE",
+      "snmp": "ACTIVE"
+    },
+    "last_trip": "2026-04-19T10:14:33.819Z",
+    "last_trip_cause": "PTOC I> Phase A (612.4 A)",
+    "protection_status": {
+      "PTOC_50_1": { "name": "ТО (I>>)", "state": "READY" },
+      "PTOC_51_1": { "name": "МТЗ (I>)", "state": "READY" },
+      "PTOC_51N":  { "name": "ТЗНП (I0>)", "state": "READY" },
+      "PTOV_59":   { "name": "ЗМН (U>)", "state": "READY" },
+      "PTUV_27":   { "name": "ЗНН (U<)", "state": "READY" },
+      "RREC_79":   { "name": "АПВ", "state": "READY" }
+    },
+    "location": "ПС 110/10 кВ Западная, Яч.14, Фидер Промзона-1"
+  },
+
+  "GET /api/v1/events?limit=5": [
+    {
+      "id": 1,
+      "timestamp": "2026-04-19T10:14:33.412Z",
+      "event_type": "PICKUP",
+      "description": "Пуск МТЗ I> фаза A",
+      "value": "612.4 A",
+      "source": "PTOC1"
+    },
+    {
+      "id": 2,
+      "timestamp": "2026-04-19T10:14:33.814Z",
+      "event_type": "TRIP",
+      "description": "Срабатывание МТЗ I> фаза A",
+      "value": "612.4 A",
+      "source": "PTOC1"
+    },
+    {
+      "id": 3,
+      "timestamp": "2026-04-19T10:14:33.819Z",
+      "event_type": "OPEN",
+      "description": "Выключатель XCBR1 отключён (по команде защиты)",
+      "value": "OFF",
+      "source": "XCBR1"
+    },
+    {
+      "id": 4,
+      "timestamp": "2026-04-19T10:14:35.458Z",
+      "event_type": "CLOSE",
+      "description": "Выключатель XCBR1 включён (АПВ)",
+      "value": "ON",
+      "source": "RREC1"
+    },
+    {
+      "id": 5,
+      "timestamp": "2026-04-18T22:01:12.003Z",
+      "event_type": "INFO",
+      "description": "Синхронизация NTP выполнена",
+      "value": "Stratum 3",
+      "source": "SYSTEM"
+    }
+  ],
+
+  "GET /api/v1/settings": {
+    "active_group": 1,
+    "groups": [
+      {
+        "id": 1,
+        "name": "Группа уставок 1 (Рабочая)",
+        "settings": [
+          { "id": "50_1", "name": "ТО ступень 1 (I>>)", "value": 1200, "unit": "A (перв.)", "enabled": true, "min": 100, "max": 25000 },
+          { "id": "50_2", "name": "ТО ступень 2 (I>>>)", "value": 3000, "unit": "A (перв.)", "enabled": true, "min": 100, "max": 25000 },
+          { "id": "51_1_pickup", "name": "МТЗ ступень 1 (I>)", "value": 600, "unit": "A (перв.)", "enabled": true, "min": 10, "max": 5000 },
+          { "id": "51_1_curve", "name": "МТЗ тип кривой", "value": "IEC Standard Inverse (SI)", "unit": "-", "enabled": true, "options": ["IEC-SI", "IEC-VI", "IEC-EI", "IEC-LTI", "ANSI-MI", "ANSI-VI", "ANSI-EI", "DT"] },
+          { "id": "51_1_tms", "name": "МТЗ множитель времени", "value": 0.30, "unit": "с", "enabled": true, "min": 0.05, "max": 15.0, "step": 0.01 },
+          { "id": "51N_pickup", "name": "ТЗНП (I0>)", "value": 30, "unit": "A (перв.)", "enabled": true, "min": 1, "max": 1000 },
+          { "id": "51N_time", "name": "ТЗНП выдержка времени", "value": 0.50, "unit": "с", "enabled": true, "min": 0.0, "max": 100.0, "step": 0.01 },
+          { "id": "79_shots", "name": "АПВ количество циклов", "value": 1, "unit": "-", "enabled": true, "options": ["1", "2", "3", "OFF"] },
+          { "id": "79_dead", "name": "АПВ бестоковая пауза", "value": 0.80, "unit": "с", "enabled": true, "min": 0.1, "max": 60.0, "step": 0.01 },
+          { "id": "79_reclaim", "name": "АПВ время восстановления", "value": 30.0, "unit": "с", "enabled": true, "min": 1.0, "max": 300.0, "step": 0.1 },
+          { "id": "27_pickup", "name": "ЗНН (U<)", "value": 80, "unit": "% Uном", "enabled": true, "min": 10, "max": 100 },
+          { "id": "59_pickup", "name": "ЗМН (U>)", "value": 120, "unit": "% Uном", "enabled": true, "min": 100, "max": 200 }
+        ]
+      }
+    ]
+  },
+
+  "GET /api/v1/files/comtrade": [
+    { "name": "fault_2026_03_15_142301", "date": "2026-03-15T14:23:01Z", "trigger": "PTOC Trip I>", "size_kb": 245 },
+    { "name": "fault_2026_02_28_083012", "date": "2026-02-28T08:30:12Z", "trigger": "PTOC Trip I>>", "size_kb": 312 },
+    { "name": "normal_check_001", "date": "2026-01-20T12:00:00Z", "trigger": "Manual Start", "size_kb": 89 }
+  ],
+
+  "POST /api/v1/control (select)": {
+    "request": { "action": "select", "target": "XCBR1", "value": "open" },
+    "response": { "status": "selected", "target": "XCBR1", "command": "open", "timeout_s": 30, "msg": "Объект выбран. Выполните EXECUTE в течение 30 секунд." }
+  },
+
+  "POST /api/v1/control (execute without select)": {
+    "request": { "action": "execute", "target": "XCBR1", "value": "open" },
+    "response": { "status": "error", "code": 403, "msg": "Объект не выбран. Выполните SELECT перед EXECUTE." }
+  },
+
+  "POST /login (failure)": {
+    "request_content_type": "application/x-www-form-urlencoded",
+    "request_body": "username=admin&password=wrong&role=admin",
+    "response": { "status": "error", "msg": "Неверный логин или пароль", "remaining_attempts": 4 }
+  },
+
+  "POST /login (success)": {
+    "request_body": "username=admin&password=digsi&role=admin",
+    "response": {
+      "status": "ok",
+      "token": "eyJhbGciOiJIUzI1NiJ9.SIPROTEC5.dummytoken",
+      "role": "admin",
+      "username": "admin",
+      "expires": 3600
+    }
+  }
+}
