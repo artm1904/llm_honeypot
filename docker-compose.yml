@@ -15,3 +15,4 @@ services:
       OPEN_AI_SECRET_KEY: ${OPEN_AI_SECRET_KEY}
     volumes:
       - "./configurations:/opt/beelzebub/configurations"
+      - "./industrial-samples/rag-knowledge:/opt/beelzebub/industrial-samples/rag-knowledge"
