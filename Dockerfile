@@ -23,12 +23,15 @@ RUN sed -i "s#logsPath: ./log#logsPath: ./configurations/log/beelzebub.json#g" c
 # Этап 2: Финальный образ (Минимальный размер)
 FROM scratch
 
+# 1. Сначала создаем рабочую директорию
+WORKDIR /opt/beelzebub
+
 # Копируем сертификаты (нужны для HTTPS/LLM)
 COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 
 # Копируем собранный бинарник и конфиги
-COPY --from=builder /root/beelzebub/main /opt/beelzebub/
-COPY --from=builder /root/beelzebub/configurations /opt/beelzebub/configurations
+COPY --from=builder --chown=2000:2000 /root/beelzebub/main .
+COPY --from=builder --chown=2000:2000 /root/beelzebub/configurations ./configurations
 
 # Настройки запуска
 WORKDIR /opt/beelzebub
