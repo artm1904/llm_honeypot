@@ -5,6 +5,8 @@ import (
 	"io"
 	"net"
 	"net/http"
+	"regexp"
+	"strconv"
 	"strings"
 
 	"github.com/mariocandela/beelzebub/v3/parser"
@@ -14,6 +16,64 @@ import (
 	"github.com/google/uuid"
 	log "github.com/sirupsen/logrus"
 )
+
+// httpStatusLineRegex matches a leading HTTP status line like "HTTP/1.1 200 OK".
+var httpStatusLineRegex = regexp.MustCompile(`^HTTP/\d\.\d\s+(\d{3})(?:\s+[^\r\n]*)?\r?\n`)
+
+// sanitizeLLMHTTPResponse strips a leaked HTTP status line and headers from an
+// LLM-generated body. If present, the parsed status code and headers are merged
+// into resp so they still take effect; otherwise resp is left as-is and only the
+// body is updated.
+func sanitizeLLMHTTPResponse(raw string, resp *httpResponse) {
+	body := strings.TrimLeft(raw, " \t\r\n")
+
+	statusMatch := httpStatusLineRegex.FindStringSubmatchIndex(body)
+	if statusMatch != nil {
+		if code, err := strconv.Atoi(body[statusMatch[2]:statusMatch[3]]); err == nil {
+			resp.StatusCode = code
+		}
+		body = body[statusMatch[1]:]
+	} else if !looksLikeHeaderLine(body) {
+		resp.Body = raw
+		return
+	}
+
+	// Consume header lines until a blank line or a non-header line.
+	for {
+		nl := strings.Index(body, "\n")
+		if nl == -1 {
+			break
+		}
+		line := strings.TrimRight(body[:nl], "\r")
+		if line == "" {
+			body = body[nl+1:]
+			break
+		}
+		if !looksLikeHeaderLine(line) {
+			break
+		}
+		if colon := strings.Index(line, ":"); colon > 0 {
+			resp.Headers = append(resp.Headers, line)
+		}
+		body = body[nl+1:]
+	}
+
+	resp.Body = body
+}
+
+func looksLikeHeaderLine(s string) bool {
+	colon := strings.Index(s, ":")
+	if colon <= 0 {
+		return false
+	}
+	for i := 0; i < colon; i++ {
+		c := s[i]
+		if !((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') || (c >= '0' && c <= '9') || c == '-' || c == '_') {
+			return false
+		}
+	}
+	return true
+}
 
 type HTTPStrategy struct{}
 
@@ -128,7 +188,7 @@ func buildHTTPResponse(servConf parser.BeelzebubServiceConfiguration, tr tracer.
 			resp.Body = "404 Not Found!"
 			return resp, fmt.Errorf("ExecuteModel error: %s, %v", command, err)
 		}
-		resp.Body = completions
+		sanitizeLLMHTTPResponse(completions, &resp)
 	}
 	return resp, nil
 }
