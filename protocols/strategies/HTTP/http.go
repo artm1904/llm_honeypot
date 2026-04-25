@@ -33,6 +33,9 @@ func (httpStrategy HTTPStrategy) Init(servConf parser.BeelzebubServiceConfigurat
 		for _, command := range servConf.Commands {
 			var err error
 			matched = command.Regex.MatchString(request.RequestURI)
+			if matched && command.Method != "" && !strings.EqualFold(request.Method, command.Method) {
+				matched = false
+			}
 			if matched {
 				resp, err = buildHTTPResponse(servConf, tr, command, request)
 				if err != nil {
@@ -97,6 +100,16 @@ func buildHTTPResponse(servConf parser.BeelzebubServiceConfiguration, tr tracer.
 		body = string(bodyBytes)
 	}
 	traceRequest(request, tr, command, servConf.Description, body)
+
+	if request.RequestURI == "/login" && request.Method == "POST" {
+		if strings.Contains(body, "username=admin") && strings.Contains(body, "password=digsi") && strings.Contains(body, "role=admin") {
+			resp.StatusCode = 302
+			resp.Headers = append(resp.Headers, "Location: /dashboard")
+			resp.Headers = append(resp.Headers, "Set-Cookie: session=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiYWRtaW4ifQ.signature; Path=/; HttpOnly")
+			resp.Body = "<html><head><meta http-equiv=\"refresh\" content=\"0;url=/dashboard\"></head><body>Login successful, redirecting...</body></html>"
+			return resp, nil
+		}
+	}
 
 	if command.Plugin == plugins.LLMPluginName {
 		llmProvider, err := plugins.FromStringToLLMProvider(servConf.Plugin.LLMProvider)

@@ -98,6 +98,7 @@ func (bsc BeelzebubServiceConfiguration) HashCode() (string, error) {
 type Command struct {
 	RegexStr   string         `yaml:"regex"`
 	Regex      *regexp.Regexp `yaml:"-"` // This field is parsed, not stored in the config itself.
+	Method     string         `yaml:"method"`
 	Handler    string         `yaml:"handler"`
 	Headers    []string       `yaml:"headers"`
 	StatusCode int            `yaml:"statusCode"`
